@@ -50,7 +50,7 @@ server.registerTool(
         const parsed = parseYapiUrl(url);
         if (!parsed.projectId) throw new Error('The YApi URL must contain /project/<id>/ or project_id.');
         const project = resolveProject(parsed.baseUrl, parsed.projectId);
-        return fetchDocument(url, project).then((document) => ({ document, parsed }));
+        return fetchDocument(parsed.endpoint, project).then((document) => ({ document, parsed }));
       })
       .then(({ document, parsed }) => {
         const definition = generate(document, { lang: language, name, source: url });

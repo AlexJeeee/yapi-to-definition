@@ -34,11 +34,8 @@ function unwrapResponse(payload) {
   return document;
 }
 
-export async function fetchDocument(source, options = {}) {
-  const { endpoint, projectId: urlProjectId } = parseYapiUrl(source);
-  const projectId = options.projectId || urlProjectId;
-  const token = options.token;
-  if (!projectId) throw new Error('A YApi project id is required');
+export async function fetchDocument(endpoint, project) {
+  const { projectId, token } = project;
   if (!token) throw new Error('A YApi project token is required');
   endpoint.searchParams.set('token', token);
 
@@ -217,11 +214,13 @@ export function generate(document, { lang = 'ts', name, source = '' } = {}) {
     ['Headers', listSchema(document.req_headers)],
     ['RequestBody', requestBodySchema(document)],
     ['Response', responseSchema(document)],
-  ];
+  ].filter(([, schema]) => schema);
   const sourceLine = source ? `\n * Source: ${cleanSource(source)}` : '';
   const output = [
     `/**\n * ${document.title || typeName}\n * ${String(document.method || 'GET').toUpperCase()} ${document.path || '/'}${sourceLine}\n */`,
-    ...sections.filter(([, schema]) => schema).map(([suffix, schema]) => emitType(`${typeName}${suffix}`, schema, lang)),
+    ...(lang === 'ts'
+      ? [`export namespace ${typeName} {\n${sections.map(([suffix, schema]) => `  export type ${suffix} = ${schemaType(schema, lang, schema)};`).join('\n\n')}\n}`]
+      : sections.map(([suffix, schema]) => emitType(`${typeName}${suffix}`, schema, lang))),
     `export const ${definitionName} = {\n  method: ${JSON.stringify(String(document.method || 'GET').toUpperCase())},\n  path: ${JSON.stringify(document.path || '/')},\n}${lang === 'ts' ? ' as const' : ''};`,
     '',
   ];

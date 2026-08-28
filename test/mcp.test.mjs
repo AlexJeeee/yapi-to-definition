@@ -65,7 +65,8 @@ test('serves generated definitions over MCP without token tool arguments', async
       },
     });
     assert.equal(result.isError, undefined);
-    assert.match(result.structuredContent.definition, /export type GetUserResponse = \{ id: number \};/);
+    assert.match(result.structuredContent.definition, /export namespace GetUser \{/);
+    assert.match(result.structuredContent.definition, /export type Response = \{ id: number \};/);
     assert.doesNotMatch(JSON.stringify(result), /server-side-secret/);
   } finally {
     await client.close();
