@@ -1,0 +1,42 @@
+{
+  "name": "yapi-to-definition",
+  "version": "0.1.0",
+  "description": "MCP server that generates TypeScript or JavaScript definitions from private YApi interface links.",
+  "keywords": [
+    "mcp",
+    "yapi",
+    "typescript",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexJeeee/yapi-to-definition.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AlexJeeee/yapi-to-definition/issues"
+  },
+  "homepage": "https://github.com/AlexJeeee/yapi-to-definition#readme",
+  "type": "module",
+  "bin": {
+    "yapi-to-definition": "./server.mjs",
+    "yapi-to-definition-config": "./scripts/configure.mjs"
+  },
+  "files": [
+    "server.mjs",
+    "config.mjs",
+    "scripts/generate.mjs",
+    "scripts/configure.mjs"
+  ],
+  "scripts": {
+    "start": "node server.mjs",
+    "config": "node scripts/configure.mjs",
+    "test": "node --test scripts/test-generate.mjs test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.4.3"
+  }
+}
