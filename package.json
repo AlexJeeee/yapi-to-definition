@@ -1,6 +1,6 @@
 {
   "name": "yapi-to-definition",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server that generates TypeScript or JavaScript definitions from private YApi interface links.",
   "keywords": [
     "mcp",

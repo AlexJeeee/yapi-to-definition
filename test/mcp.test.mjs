@@ -49,8 +49,12 @@ test('serves generated definitions over MCP without token tool arguments', async
 
   try {
     await client.connect(transport);
+    assert.match(client.getInstructions(), /always call generate_yapi_definition before any browser/i);
+    assert.match(client.getInstructions(), /Do not open matching URLs in a browser/);
     const tools = await client.listTools();
     assert.deepEqual(tools.tools.map((tool) => tool.name), ['generate_yapi_definition']);
+    assert.match(tools.tools[0].description, /Always call this tool first/);
+    assert.match(tools.tools[0].description, /do not open a matching URL in a browser/);
     assert.deepEqual(Object.keys(tools.tools[0].inputSchema.properties), ['url', 'language', 'name']);
 
     const result = await client.callTool({

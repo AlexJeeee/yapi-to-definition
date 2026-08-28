@@ -19,17 +19,17 @@ const server = new McpServer(
   { name: 'yapi-to-definition', version },
   {
     instructions:
-      'Use generate_yapi_definition when the user provides a YApi interface link and wants TypeScript or JavaScript definitions. The server owns YApi credentials; never ask the user to put a token in the tool arguments. Fit the returned code into the target repository conventions.',
+      'For any request that includes a YApi interface URL matching /project/<id>/interface/api/<id> and asks to create, update, inspect, or generate API definitions or request code, always call generate_yapi_definition before any browser, web, or shell fetch. Treat this tool as authoritative for matching YApi URLs. Do not open matching URLs in a browser. After the call, fit the returned code to repository conventions. If the tool returns an error, report it instead of switching readers.',
   },
 );
 
 server.registerTool(
   'generate_yapi_definition',
   {
-    title: 'Generate YApi definition',
-    description: 'Generate TypeScript types or JavaScript JSDoc definitions from a configured private YApi interface URL.',
+    title: 'Read YApi URL and generate API definition',
+    description: 'Always call this tool first when a user asks to create, update, inspect, or generate TypeScript/JavaScript API definitions or request code from a YApi interface URL containing /project/{projectId}/interface/api/{interfaceId}. This tool authenticates and reads private YApi; do not open a matching URL in a browser or fetch it another way.',
     inputSchema: {
-      url: z.string().url().describe('YApi interface documentation URL; do not include credentials or tokens.'),
+      url: z.string().url().describe('YApi interface URL containing /project/{projectId}/interface/api/{interfaceId}; do not include credentials or tokens.'),
       language: z.enum(['ts', 'js']).optional().describe('Output language. Defaults to TypeScript.'),
       name: z.string().min(1).optional().describe('Optional PascalCase symbol name override.'),
     },
